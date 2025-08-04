@@ -1,15 +1,35 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.dotnomi.fabricdependencyinjectionplugin</id>
-    <name>fabric-dependency-injection-plugin</name>
+    <id>com.github.dotnomi</id>
+    <name>Fabric DI</name>
     <vendor>dotnomi</vendor>
 
-    <depends>com.intellij.modules.platform</depends>
+    <description>
+        <![CDATA[
+            Provides editor support for the Fabric Dependency Injection framework.
+        ]]>
+    </description>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
+    <!--depends>com.intellij.java</depends-->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.dotnomi.fabricdependencyinjectionplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.dotnomi.fabricdependencyinjectionplugin.startup.MyProjectActivity" />
+        <localInspection
+            language="JAVA"
+            groupName="Fabric DI"
+            displayName="Circular Dependency Detection"
+            enabledByDefault="true"
+            implementationClass="com.dotnomi.fabricdependencyinjection.localinspectiontool.CircularDependencyInspection"/>
+
+        <psi.referenceContributor language="JAVA" implementation="com.dotnomi.fabricdependencyinjection.completion.PackageReferenceContributor" order="last"/>
+        <typedHandler implementation="com.dotnomi.fabricdependencyinjection.listener.PackageTypedHandler"/>
+
+        <implicitUsageProvider implementation="com.dotnomi.fabricdependencyinjection.usageprovider.ModFrameworkUsageProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.dotnomi.fabricdependencyinjection.linemarker.ModInjectLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.dotnomi.fabricdependencyinjection.linemarker.PostConstructLineMarkerProvider"/>
+        <annotator language="JAVA" implementationClass="com.dotnomi.fabricdependencyinjection.annotator.ModInjectAnnotator"/>
+        <annotator language="JAVA" implementationClass="com.dotnomi.fabricdependencyinjection.annotator.ModMainAnnotator"/>
+        <annotator language="JAVA" implementationClass="com.dotnomi.fabricdependencyinjection.annotator.PostConstructAnnotator"/>
     </extensions>
 </idea-plugin>
